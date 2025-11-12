@@ -54,3 +54,12 @@ To view the Solr response for all Solr requests made to render a page, add `debu
 
 The Solr requests will be executed with `debugQuery=true`, so the response will include debugging informations
 including the amount of time to execute each part of the query / each facet.
+
+### Adding a lazy async facet
+The lazy ansync pattern should be used for slow facets. Each of these facets involves a separate query to Solr.
+
+1. Add an attribute for the facet to `Search::ItemForm`.
+2. Add a `<turbo-frame>` for the facet to `Search::FacetSectionComponent`.
+3. Add a new endpoint to facet resource in `routes.rb`.
+4. Add a method for the endpoint to `Search::FacetsController`. For a standard value facet, this should invoke `Searchers::Facet`, which allows specifing sort order, limits, etc.
+5. Add a view for the endpoint, which should include a matching `<turbo-frame>` for the facet.
