@@ -8,6 +8,10 @@ def find_project_results_section
   all('section[aria-label="Project results"]')&.first
 end
 
+def find_tag_results_section
+  all('section[aria-label="Tag results"]')&.first
+end
+
 def find_next_page
   find_link('Next page')
 end
@@ -18,6 +22,10 @@ end
 
 def find_project_result(project)
   find("li#projects-result-#{project.parameterize}")
+end
+
+def find_tag_result(tag)
+  find("li#tags-result-#{tag.parameterize}")
 end
 
 def find_facet_section(facet_label)

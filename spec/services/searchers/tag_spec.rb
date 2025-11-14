@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe Searchers::Project do
-  let(:results) { described_class.call(search_form:) }
+RSpec.describe Searchers::Tag do
+  let(:results) { described_class.call(search_form:, field: Search::Fields::PROJECT_TAGS) }
   let(:search_form) { Search::Form.new(query:) }
   let(:query) { 'project 1' }
   let(:solr_response) do

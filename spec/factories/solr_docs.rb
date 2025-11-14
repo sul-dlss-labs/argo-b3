@@ -14,6 +14,7 @@ FactoryBot.define do
       object_type { 'item' }
       apo_druid { generate(:unique_druid) }
       projects { [] }
+      tags { [] }
     end
 
     initialize_with do
@@ -25,6 +26,8 @@ FactoryBot.define do
         Search::Fields::APO_ID => [apo_druid],
         Search::Fields::PROJECT_TAGS => explode_tag_hierarchy(tags: projects),
         Search::Fields::PROJECT_HIERARCHICAL_TAGS => explode_tag_hierarchy(tags: projects, as_hierarchical: true),
+        Search::Fields::OTHER_TAGS => explode_tag_hierarchy(tags:),
+        Search::Fields::OTHER_HIERARCHICAL_TAGS => explode_tag_hierarchy(tags:, as_hierarchical: true),
         FULL_TITLE_UNSTEMMED => title,
         FULL_TITLE => title
       }
@@ -54,6 +57,7 @@ FactoryBot.define do
       sequence(:title) { |n| "Test Collection #{n}" }
       object_type { 'collection' }
       projects { [] }
+      tags { [] }
     end
 
     initialize_with do
@@ -64,6 +68,8 @@ FactoryBot.define do
         Search::Fields::OBJECT_TYPE => [object_type],
         Search::Fields::PROJECT_TAGS => explode_tag_hierarchy(tags: projects),
         Search::Fields::PROJECT_HIERARCHICAL_TAGS => explode_tag_hierarchy(tags: projects, as_hierarchical: true),
+        Search::Fields::OTHER_TAGS => explode_tag_hierarchy(tags:),
+        Search::Fields::OTHER_HIERARCHICAL_TAGS => explode_tag_hierarchy(tags:, as_hierarchical: true),
         FULL_TITLE_UNSTEMMED => title,
         FULL_TITLE => title
       }
@@ -78,6 +84,12 @@ FactoryBot.define do
   trait :with_projects do
     transient do
       projects { ['Project 1', 'Project 2 : Project 2a'] }
+    end
+  end
+
+  trait :with_tags do
+    transient do
+      tags { ['Tag 1', 'Tag 2 : Tag 2a'] }
     end
   end
 end

@@ -1,0 +1,10 @@
+<%= turbo_frame_tag 'tags-search' do %>
+  <% if @tags.any? %>
+    <section aria-label="Tag results">
+      <h3>Tag results (<%= number_with_delimiter(@tags.count) %> found)</h3>
+      <ul>
+        <%= render Search::FacetResultComponent.with_collection(@tags, form_field: 'tags') %>
+      </ul>
+    </section>
+  <% end %>
+<% end %>
