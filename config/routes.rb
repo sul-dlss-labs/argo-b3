@@ -18,7 +18,11 @@ Rails.application.routes.draw do
 
   namespace :search do
     resources :items, only: [:index]
+
     resources :projects, only: [:index]
+
+    resources :tags, only: [:index]
+
     resources :facets, only: [] do
       collection do
         get 'project_tags'

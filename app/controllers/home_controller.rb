@@ -9,5 +9,6 @@ class HomeController < SearchApplicationController
     return if @search_form.query.blank?
 
     @projects_search_form = build_form(form_class: Search::Form)
+    @tags_search_form = build_form(form_class: Search::Form)
   end
 end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Searchers
-  # Searcher for projects
-  class Project
+  # Searcher for tags (including project tags)
+  class Tag
     include Search::Fields
 
     def self.call(...)
@@ -10,18 +10,20 @@ module Searchers
     end
 
     # @param search_form [Search::Form]
-    def initialize(search_form:)
+    # @param field [String]
+    def initialize(search_form:, field:)
       @search_form = search_form
+      @field = field
     end
 
     # @return [SearchResults::FacetValues] search results
     def call
-      SearchResults::FacetValues.new(solr_response:, field: PROJECT_TAGS)
+      SearchResults::FacetValues.new(solr_response:, field:)
     end
 
     private
 
-    attr_reader :search_form
+    attr_reader :search_form, :field
 
     def solr_response
       Search::SolrService.call(request: solr_request)
@@ -33,7 +35,7 @@ module Searchers
         q: '*:*',
         rows: 0,
         facet: true,
-        'facet.field': PROJECT_TAGS,
+        'facet.field': field,
         'facet.matches': matches_regex,
         debugQuery: search_form.debug
       }
