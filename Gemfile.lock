@@ -203,6 +203,9 @@ GEM
     herb (0.8.0-arm-linux-gnu)
     herb (0.8.0-arm-linux-musl)
     herb (0.8.0-x86_64-linux-musl)
+    honeybadger (6.1.3)
+      logger
+      ostruct
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     image_processing (1.14.0)
@@ -530,6 +533,7 @@ DEPENDENCIES
   erb_lint
   factory_bot_rails
   herb
+  honeybadger
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
