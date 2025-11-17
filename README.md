@@ -5,6 +5,7 @@
 # README
 
 ## Development
+
 To connect to production Solr
 
 ```
@@ -15,6 +16,16 @@ In a separate terminal window:
 ```
 SETTINGS__SOLR__URL=http://localhost:8985/solr/argo_prod bin/dev
 ```
+
+### Linters
+
+To run all configured linters, run `bin/rake lint`.
+
+To run linters individually, run which ones you need:
+
+* Ruby code: `bin/rubocop` (add `-a` flag to autocorrect violations)
+* ERB templates: `bin/erb_lint --lint-all --format compact` (add `-a` flag to autocorrect violations)
+* JavaScript code: `yarn run lint` (add `--fix` flag to autocorrect violations)
 
 ## Testing
 
@@ -67,7 +78,6 @@ The lazy async pattern should be used for slow facets. Each of these facets invo
 4. Add a method for the endpoint to `Search::FacetsController`. For a standard value facet, this should invoke `Searchers::Facet`, which allows specifing sort order, limits, etc.
 5. Add a view for the endpoint, which should include a matching `<turbo-frame>` for the facet.
 6. Add the facet to `Search::ItemQueryBuilder.filter_queries` and add a spec to `spec/services/search/item_query_builder_spec.rb`.
-
 
 ### Adding a non-lazy sync facet
 The non-lazy sync pattern should be used for fast facets. The facet values are retrieved as part of the main query to Solr (i.e., the query that returns the search results).

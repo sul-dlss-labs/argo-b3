@@ -17,8 +17,14 @@ begin
     sh('bin/erb_lint --lint-all --format compact')
   end
 
+  desc 'Run linter against JS files'
+  task eslint: :environment do
+    puts 'Running JS linter...'
+    system('yarn run lint')
+  end
+
   desc 'Run all configured linters'
-  task lint: %i[rubocop erblint]
+  task lint: %i[rubocop erblint eslint]
 
   # clear the default task injected by rspec
   task(:default).clear
