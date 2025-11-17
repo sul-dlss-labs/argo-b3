@@ -40,6 +40,7 @@ gem 'image_processing', '~> 1.2'
 
 # Additional gems
 gem 'config'
+gem 'honeybadger'
 gem 'rsolr'
 gem 'view_component'
 
