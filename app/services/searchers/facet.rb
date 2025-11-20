@@ -13,13 +13,13 @@ module Searchers
     # @param field [String] the Solr field to facet on
     # @param alpha_sort [Boolean] whether to sort facet values alphabetically
     # @param limit [Integer, nil] maximum number of facet values to return
-    # @param facet_query [String, nil] optional query to filter facet values
-    def initialize(search_form:, field:, alpha_sort: false, limit: nil, facet_query: nil)
+    # @param page [Integer, nil] optional page number for paged facets
+    def initialize(search_form:, field:, alpha_sort: false, limit: nil, page: nil)
       @search_form = search_form
       @field = field
       @alpha_sort = alpha_sort
       @limit = limit
-      @facet_query = facet_query
+      @page = page
     end
 
     # @return [SearchResults::FacetCounts] search results
@@ -29,7 +29,7 @@ module Searchers
 
     private
 
-    attr_reader :search_form, :field, :alpha_sort, :limit, :facet_query
+    attr_reader :search_form, :field, :alpha_sort, :limit, :page
 
     def solr_response
       Search::SolrService.call(request: solr_request)
@@ -46,7 +46,7 @@ module Searchers
 
     def facet_json
       {
-        field => Search::FacetBuilder.call(field:, alpha_sort:, limit:, facet_query:)
+        field => Search::FacetBuilder.call(field:, alpha_sort:, limit:, page:)
       }
     end
   end

@@ -6,6 +6,8 @@ module Searchers
     include Search::Fields
 
     PER_PAGE = 20
+    # Attributes of Search::Facets::Config to be passed to Search::FacetBuilder
+    FACET_BUILDER_ARGS = %i[limit alpha_sort exclude].freeze
 
     def self.call(...)
       new(...).call
@@ -43,8 +45,9 @@ module Searchers
     def facet_json
       # These are fast (non-lazy) facets
       {
-        OBJECT_TYPE => Search::FacetBuilder.call(field: OBJECT_TYPE, exclude: true),
-        ACCESS_RIGHTS => Search::FacetBuilder.call(field: ACCESS_RIGHTS, limit: 50, alpha_sort: true)
+        OBJECT_TYPE => Search::FacetBuilder.call(field: OBJECT_TYPE, **Search::Facets::OBJECT_TYPES.to_h.slice(*FACET_BUILDER_ARGS)),
+        ACCESS_RIGHTS => Search::FacetBuilder.call(field: ACCESS_RIGHTS, **Search::Facets::ACCESS_RIGHTS.to_h.slice(*FACET_BUILDER_ARGS)),
+        MIMETYPES => Search::FacetBuilder.call(field: MIMETYPES, **Search::Facets::MIMETYPES.to_h.slice(*FACET_BUILDER_ARGS))
       }
     end
 

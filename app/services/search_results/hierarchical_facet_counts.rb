@@ -2,14 +2,7 @@
 
 module SearchResults
   # Search results for hierarchical facet counts (value and count)
-  class HierarchicalFacetCounts
-    include Enumerable
-
-    def initialize(solr_response:, field:)
-      @solr_response = solr_response
-      @field = field
-    end
-
+  class HierarchicalFacetCounts < FacetCounts
     # @yield [SearchResults::FacetCount] each facet count
     def each(&) # rubocop:disable Metrics/AbcSize
       return enum_for(:each) unless block_given?
@@ -42,16 +35,6 @@ module SearchResults
         end
         yield HierarchicalFacetCount.new(value:, count:)
       end
-    end
-
-    def to_ary
-      to_a
-    end
-
-    attr_reader :solr_response, :field
-
-    def facet_result
-      @solr_response['facets'][field]
     end
   end
 end

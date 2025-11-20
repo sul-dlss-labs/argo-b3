@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Search
+  # Constants for Solr fields
   module Fields
     ACCESS_RIGHTS = 'rights_descriptions_ssimdv'
     APO_ID = 'governed_by_ssim'

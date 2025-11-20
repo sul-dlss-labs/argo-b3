@@ -12,12 +12,14 @@ module Searchers
     # @param value [String, nil] the facet value to return children for. If nil, returns top-level values
     # @param alpha_sort [Boolean] whether to sort facet values alphabetically
     # @param limit [Integer, nil] maximum number of facet values to return
-    def initialize(search_form:, field:, value: nil, alpha_sort: false, limit: nil)
+    # @param page [Integer, nil] optional page number for paged facets
+    def initialize(search_form:, field:, value: nil, alpha_sort: false, limit: nil, page: nil) # rubocop:disable Metrics/ParameterLists
       @search_form = search_form
       @field = field
       @value = value
       @alpha_sort = alpha_sort
       @limit = limit
+      @page = page
     end
 
     # @return [SearchResults::FacetCounts] search results
@@ -27,7 +29,7 @@ module Searchers
 
     private
 
-    attr_reader :search_form, :field, :alpha_sort, :limit, :value
+    attr_reader :search_form, :field, :alpha_sort, :limit, :value, :page
 
     def solr_response
       Search::SolrService.call(request: solr_request)
@@ -44,7 +46,7 @@ module Searchers
 
     def facet_json
       {
-        field => Search::FacetBuilder.call(field:, alpha_sort:, limit:, facet_prefix: prefix)
+        field => Search::FacetBuilder.call(field:, alpha_sort:, limit:, facet_prefix: prefix, page:)
       }
     end
 

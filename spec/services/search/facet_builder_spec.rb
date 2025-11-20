@@ -41,15 +41,6 @@ RSpec.describe Search::FacetBuilder do
     end
   end
 
-  context 'when facet query is provided' do
-    it 'includes facet query in the facet json' do
-      expect(described_class.call(
-               field: Search::Fields::PROJECT_TAGS,
-               facet_query: 'test_query'
-             )).to include(contains: 'test_query', 'contains.ignoreCase': true)
-    end
-  end
-
   context 'when exclude is true' do
     it 'includes domain excludeTags in the facet json' do
       expect(described_class.call(
