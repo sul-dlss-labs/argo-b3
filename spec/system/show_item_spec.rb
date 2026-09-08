@@ -93,7 +93,7 @@ RSpec.describe 'Show item' do
       Search::Fields::FORMATTED_REGISTERED_EARLIEST_DATE => '2025-01-08',
       Search::Fields::FORMATTED_DEPOSITED_LATEST_DATE => last_deposited,
       Search::Fields::FORMATTED_EMBARGO_RELEASE_DATE => '2040-06-15 12:00:00 PM',
-      Search::Fields::OTHER_TAGS => ['Registered By : jdoe', 'Remediated By : labtech', 'Ticket : TESTREQ-1'],
+      Search::Fields::ALL_TAGS => ['Registered By : jdoe', 'Remediated By : labtech', 'Ticket : TESTREQ-1'],
       Search::Fields::TICKETS => ['TESTREQ-1']
     }
   end

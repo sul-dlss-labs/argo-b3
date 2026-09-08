@@ -69,7 +69,7 @@
           </div>
         <% end %>
         <div class="show-box flex-fill">
-          <%= render Show::TagComponent.new(tags: Array(@solr_doc.other_tags), pinned_tags: @pinned_tags) %>
+          <%= render Show::TagComponent.new(tags: Array(@solr_doc.all_tags), pinned_tags: @pinned_tags) %>
         </div>
       </div>
 
