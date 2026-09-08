@@ -188,6 +188,34 @@ RSpec.describe BulkActions::ManageEmbargoJob do
     end
   end
 
+  context 'when a new version is opened' do
+    let(:job_item) do
+      described_class::JobItem.new(druid:, index: 2, job:, row:).tap do |job_item|
+        allow(job_item).to receive(:check_update_ability?).and_return(true)
+        allow(job_item).to receive(:close_version_if_needed!)
+      end
+    end
+    let(:opened_cocina_object) { Cocina::Models.with_metadata(build(:dro, id: druid, version: 2), 'lock-v2') }
+
+    before do
+      allow(Sdr::VersionService).to receive(:open?).with(druid:).and_return(false)
+      allow(Sdr::VersionService).to receive(:openable?).with(druid:).and_return(true)
+      allow(Sdr::VersionService).to receive(:open).and_return(opened_cocina_object)
+    end
+
+    it 'updates the embargo using the opened version of the object' do
+      job.perform_now
+
+      expect(Sdr::Repository).to have_received(:update) do |args|
+        expect(args[:cocina_object].lock).to eq 'lock-v2'
+        expect(args[:cocina_object].version).to eq 2
+        expect(args[:cocina_object].access.embargo.releaseDate).to eq DateTime.parse(release_date)
+      end
+
+      expect(bulk_action.reload.druid_count_success).to eq 1
+    end
+  end
+
   context 'when download is location-based and location is provided' do
     let(:download) { 'location-based' }
     let(:csv_file) do

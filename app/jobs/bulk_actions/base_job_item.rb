@@ -47,6 +47,9 @@ module BulkActions
       raise 'Unable to open new version' unless Sdr::VersionService.openable?(druid:)
 
       @cocina_object = Sdr::VersionService.open(druid:, description:, opening_user_name: user_id)
+      # If the cocina model was already built from the previous cocina object, rebase it on the opened
+      # cocina object so that saving does not report a version mismatch.
+      @cocina_model&.refresh_cocina_object(@cocina_object)
       log("Opened new version (#{description})")
     end
 

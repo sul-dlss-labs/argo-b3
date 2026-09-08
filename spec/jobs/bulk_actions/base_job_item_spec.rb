@@ -65,12 +65,14 @@ RSpec.describe BulkActions::BaseJobItem do
     end
 
     context 'when version is not open but openable' do
-      let(:cocina_object) { instance_double(Cocina::Models::DRO, version: 2) }
+      let(:cocina_object) { build(:dro_with_metadata, id: druid) }
+      let(:opened_cocina_object) { Cocina::Models.with_metadata(build(:dro, id: druid, version: 2), 'lock-v2') }
 
       before do
+        allow(Sdr::Repository).to receive(:find).with(druid:).and_return(cocina_object)
         allow(Sdr::VersionService).to receive(:open?).with(druid:).and_return(false)
         allow(Sdr::VersionService).to receive(:openable?).with(druid:).and_return(true)
-        allow(Sdr::VersionService).to receive(:open).and_return(cocina_object)
+        allow(Sdr::VersionService).to receive(:open).and_return(opened_cocina_object)
       end
 
       it 'opens a new version' do
@@ -78,7 +80,18 @@ RSpec.describe BulkActions::BaseJobItem do
         expect(Sdr::VersionService).to have_received(:open).with(druid:, description: 'Testing open version',
                                                                  opening_user_name: 'a_user')
         expect(job).to have_received(:log).with('Opened new version (Testing open version)')
-        expect(bulk_action_item.cocina_object).to eq cocina_object
+        expect(bulk_action_item.cocina_object).to eq opened_cocina_object
+      end
+
+      context 'when the cocina model has already been built and changed' do
+        it 'refreshes the cocina model with the opened cocina object, retaining changes' do
+          bulk_action_item.cocina_model.source_id = 'changed:source-id'
+          bulk_action_item.open_new_version_if_needed!(description: 'Testing open version')
+
+          expect(bulk_action_item.cocina_model.previous_cocina_object).to eq opened_cocina_object
+          expect(bulk_action_item.cocina_model.source_id).to eq 'changed:source-id'
+          expect(bulk_action_item.cocina_model.changed?).to be true
+        end
       end
     end
 
