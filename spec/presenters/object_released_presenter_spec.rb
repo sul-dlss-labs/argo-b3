@@ -23,7 +23,9 @@ RSpec.describe ObjectReleasedPresenter do
     end
 
     context 'when there are release tags' do
-      let(:release_tags) { [instance_double(Dor::Services::Client::ReleaseTag, to: 'Searchworks')] }
+      let(:release_tags) do
+        [instance_double(Dor::Services::Client::ReleaseTag, to: 'Searchworks', release: true)]
+      end
 
       it 'returns the released heading' do
         expect(presenter.heading).to eq(I18n.t('show.released_to.released.heading'))
@@ -37,14 +39,37 @@ RSpec.describe ObjectReleasedPresenter do
         end
       end
     end
+
+    context 'when all release tags have release false' do
+      let(:release_tags) do
+        [instance_double(Dor::Services::Client::ReleaseTag, to: 'Searchworks', release: false)]
+      end
+
+      it 'returns the unreleased heading' do
+        expect(presenter.heading).to eq(I18n.t('show.released_to.unreleased.heading'))
+      end
+    end
+
+    context 'when some release tags have release false' do
+      let(:release_tags) do
+        [
+          instance_double(Dor::Services::Client::ReleaseTag, to: 'Searchworks', release: false),
+          instance_double(Dor::Services::Client::ReleaseTag, to: 'Earthworks', release: true)
+        ]
+      end
+
+      it 'returns the released heading' do
+        expect(presenter.heading).to eq(I18n.t('show.released_to.released.heading'))
+      end
+    end
   end
 
   describe '#release_tag_links' do
     let(:release_tags) do
       [
-        instance_double(Dor::Services::Client::ReleaseTag, to: 'Searchworks'),
-        instance_double(Dor::Services::Client::ReleaseTag, to: 'Earthworks'),
-        instance_double(Dor::Services::Client::ReleaseTag, to: 'PURL sitemap')
+        instance_double(Dor::Services::Client::ReleaseTag, to: 'Searchworks', release: true),
+        instance_double(Dor::Services::Client::ReleaseTag, to: 'Earthworks', release: true),
+        instance_double(Dor::Services::Client::ReleaseTag, to: 'PURL sitemap', release: true)
       ]
     end
 
@@ -65,6 +90,31 @@ RSpec.describe ObjectReleasedPresenter do
         searchworks_link = presenter.release_tag_links.find { |link| link[:label] == 'Searchworks' }
 
         expect(searchworks_link[:url]).to eq('https://searchworks.stanford.edu/view/a1234567')
+      end
+    end
+
+    context 'when a release tag has release false' do
+      let(:release_tags) do
+        [
+          instance_double(Dor::Services::Client::ReleaseTag, to: 'Searchworks', release: false),
+          instance_double(Dor::Services::Client::ReleaseTag, to: 'Earthworks', release: true)
+        ]
+      end
+
+      it 'omits the unreleased target' do
+        expect(presenter.release_tag_links).to eq(
+          [{ label: 'Earthworks', url: 'https://earthworks.stanford.edu/catalog/stanford-bc123df4567' }]
+        )
+      end
+    end
+
+    context 'when all release tags have release false' do
+      let(:release_tags) do
+        [instance_double(Dor::Services::Client::ReleaseTag, to: 'Searchworks', release: false)]
+      end
+
+      it 'returns no links' do
+        expect(presenter.release_tag_links).to eq([])
       end
     end
   end

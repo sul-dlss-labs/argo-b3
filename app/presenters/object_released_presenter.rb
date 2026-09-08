@@ -17,15 +17,21 @@ class ObjectReleasedPresenter
   end
 
   def release_tag_links
-    release_tags.map { |release_tag| { label: release_tag.to, url: release_tag_url(release_tag) } }
+    released_release_tags.map { |release_tag| { label: release_tag.to, url: release_tag_url(release_tag) } }
   end
 
   private
 
   attr_reader :document, :version_service, :release_tags
 
+  def released_release_tags
+    # A release tag can have release=false indicating that the object should not be released to that target
+    # (even if the collection is released to that target).
+    release_tags.select(&:release)
+  end
+
   def unreleased?
-    release_tags.empty? || undeposited?
+    released_release_tags.empty? || undeposited?
   end
 
   def undeposited?
