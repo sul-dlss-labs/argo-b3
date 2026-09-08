@@ -158,6 +158,34 @@ RSpec.describe CocinaModels::Dro do
     end
   end
 
+  describe '#refresh_cocina_object' do
+    let(:user_name) { 'test_user' }
+    let(:description) { 'Created or updated embargo' }
+    let(:new_source_id) { 'changed:source-id' }
+    let(:opened_cocina_object) do
+      Cocina::Models.with_metadata(build(:dro, id: cocina_object.externalIdentifier, version: 2), 'lock-v2')
+    end
+
+    before do
+      allow(Sdr::Repository).to receive(:update)
+      dro.source_id = new_source_id
+    end
+
+    it 'saves pending changes against the refreshed cocina object' do
+      dro.refresh_cocina_object(opened_cocina_object)
+      expect(dro.changed?).to be true
+      expect(dro.source_id).to eq(new_source_id)
+
+      dro.save!(user_name:, description:)
+      expect(Sdr::Repository).to have_received(:update) do |args|
+        new_cocina_object = args[:cocina_object]
+        expect(new_cocina_object.lock).to eq('lock-v2')
+        expect(new_cocina_object.version).to eq(2)
+        expect(new_cocina_object.identification.sourceId).to eq(new_source_id)
+      end
+    end
+  end
+
   describe '#create!' do
     let(:user_name) { 'test_user' }
 

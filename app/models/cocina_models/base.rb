@@ -48,6 +48,14 @@ module CocinaModels
       assign_from_cocina_object(registered_cocina_object)
     end
 
+    # Rebase the model on a newer version of the same Cocina object (e.g., after opening a new version),
+    # retaining any pending attribute changes.
+    # @param cocina_object [Cocina::Models::DROWithMetadata, Cocina::Models::CollectionWithMetadata,
+    #   Cocina::Models::AdminPolicyWithMetadata]
+    def refresh_cocina_object(cocina_object)
+      @previous_cocina_object = cocina_object
+    end
+
     def to_param
       persisted? ? druid : nil
     end
