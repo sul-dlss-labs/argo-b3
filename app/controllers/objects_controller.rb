@@ -117,9 +117,7 @@ class ObjectsController < ApplicationController
     return if navigation.blank?
 
     @search_position = position
-    @total_results = navigation.total_results
-    @previous_druid = navigation.previous_druid
-    @next_druid = navigation.next_druid
+    @navigation = navigation
   end
 
   def track_recent_object(druid)
