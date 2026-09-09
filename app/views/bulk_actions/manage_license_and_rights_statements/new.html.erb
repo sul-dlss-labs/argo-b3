@@ -17,7 +17,7 @@
                                                                  rows: 5) %>
     </fieldset>
 
-    <fieldset class="mt-section">
+    <fieldset class="my-fieldset">
       <legend>Copyright statement</legend>
       <p><%= link_to_new_tab 'Sample copyright statements.', 'https://consul.stanford.edu/display/APO/Sample+Access+Condition+statements' %></p>
       <%= render SdrViewComponents::Forms::RadioButtonComponent.new(form:, field_name: :copyright_action,
@@ -34,7 +34,7 @@
                                                                  rows: 5) %>
     </fieldset>
 
-    <fieldset class="mt-section">
+    <fieldset class="my-fieldset">
       <legend>License</legend>
       <%= render SdrViewComponents::Forms::RadioButtonComponent.new(form:, field_name: :license_action,
                                                                     label_text: 'Do not update license',

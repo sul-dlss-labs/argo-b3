@@ -47,6 +47,20 @@ RSpec.describe Edit::AccessRightsComponent, type: :component do
     end
   end
 
+  context 'when a fieldname prefix is provided' do
+    let(:component) { described_class.new(form:, fieldname_prefix: 'embargo_') }
+    let(:form) { ActionView::Helpers::FormBuilder.new(:item, item_form, vc_test_view_context, {}) }
+    let(:item_form) { ItemForm.new(embargo_view: 'stanford', embargo_download: 'none', embargo_location: 'music') }
+
+    it 'prefixes the field names' do
+      render_inline(component)
+
+      expect(page).to have_select('View access', name: 'item[embargo_view]', selected: 'Stanford')
+      expect(page).to have_select('Download access', name: 'item[embargo_download]', selected: 'None')
+      expect(page).to have_select('Location', name: 'item[embargo_location]', selected: 'Music')
+    end
+  end
+
   context 'when wiring the access rights Stimulus controller' do
     let(:manage_rights_form) { BulkActions::ManageRightsForm.new }
 
