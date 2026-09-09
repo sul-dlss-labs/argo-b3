@@ -1,0 +1,10 @@
+.bulk-action {
+  fieldset legend {
+    font-size: unset;
+    font-weight: bold;
+  }
+
+  .mt-section {
+    margin-top: $spacer * 1.5; // matches .mt-4
+  }
+}
