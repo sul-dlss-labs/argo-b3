@@ -6,62 +6,44 @@ RSpec.describe Edit::AccessRightsComponent, type: :component do
   let(:component) { described_class.new(form:) }
   let(:form) { ActionView::Helpers::FormBuilder.new(nil, manage_rights_form, vc_test_view_context, {}) }
 
-  # The same labels (World, Stanford, Location Based) appear in more than one fieldset,
-  # so assertions are scoped to the fieldset with the given legend.
-  def fieldset(legend)
-    page.find(:xpath, ".//fieldset[legend[normalize-space(text())='#{legend}']]")
-  end
-
-  context 'when the form has the default rights' do
+  context 'when the form has the default access rights' do
     let(:manage_rights_form) { BulkActions::ManageRightsForm.new }
 
-    it 'renders the view rights' do
+    it 'renders the view access select' do
       render_inline(component)
 
-      expect(fieldset('View rights')).to have_field('World', type: 'radio', checked: true)
-      expect(fieldset('View rights')).to have_field('Dark', type: 'radio', checked: false)
-      expect(fieldset('View rights')).to have_field('Citation Only', type: 'radio', checked: false)
-      expect(fieldset('View rights')).to have_field('Stanford', type: 'radio', checked: false)
-      expect(fieldset('View rights')).to have_field('Location Based', type: 'radio', checked: false)
+      expect(page).to have_select('View access', selected: 'World',
+                                                 options: ['World', 'Dark', 'Citation Only', 'Stanford',
+                                                           'Location Based'])
     end
 
-    it 'renders the download rights' do
+    it 'renders the download access select' do
       render_inline(component)
 
-      expect(fieldset('Download rights')).to have_field('World', type: 'radio', checked: true)
-      expect(fieldset('Download rights')).to have_field('Stanford', type: 'radio', checked: false)
-      expect(fieldset('Download rights')).to have_field('Location Based', type: 'radio', checked: false)
-      expect(fieldset('Download rights')).to have_field('None', type: 'radio', checked: false)
+      expect(page).to have_select('Download access', selected: 'World',
+                                                     options: ['World', 'Stanford', 'Location Based', 'None'])
     end
 
-    it 'renders the locations' do
+    # The form defaults location to nil, so no option is selected server-side.
+    it 'renders the location select' do
       render_inline(component)
 
-      expect(fieldset('Location')).to have_field('Special collections', type: 'radio', checked: false)
-      expect(fieldset('Location')).to have_field('Music', type: 'radio', checked: false)
-      expect(fieldset('Location')).to have_field('ARS', type: 'radio', checked: false)
-      expect(fieldset('Location')).to have_field('Art', type: 'radio', checked: false)
-      expect(fieldset('Location')).to have_field('Hoover Institute', type: 'radio', checked: false)
-      expect(fieldset('Location')).to have_field('Media and Microtext', type: 'radio', checked: false)
+      expect(page).to have_select('Location', options: ['Special collections', 'Music', 'ARS', 'Art',
+                                                        'Hoover Institute', 'Media and Microtext'])
     end
   end
 
-  context 'when the form has location-based rights' do
+  context 'when the form has location-based access rights' do
     let(:manage_rights_form) do
       BulkActions::ManageRightsForm.new(view: 'location-based', download: 'none', location: 'spec')
     end
 
-    it 'renders the selected rights' do
+    it 'renders the selected access rights' do
       render_inline(component)
 
-      expect(fieldset('View rights')).to have_field('Location Based', type: 'radio', checked: true)
-      expect(fieldset('View rights')).to have_field('World', type: 'radio', checked: false)
-
-      expect(fieldset('Download rights')).to have_field('None', type: 'radio', checked: true)
-      expect(fieldset('Download rights')).to have_field('World', type: 'radio', checked: false)
-
-      expect(fieldset('Location')).to have_field('Special collections', type: 'radio', checked: true)
-      expect(fieldset('Location')).to have_field('Music', type: 'radio', checked: false)
+      expect(page).to have_select('View access', selected: 'Location Based')
+      expect(page).to have_select('Download access', selected: 'None')
+      expect(page).to have_select('Location', selected: 'Special collections')
     end
   end
 
@@ -72,9 +54,9 @@ RSpec.describe Edit::AccessRightsComponent, type: :component do
       render_inline(component)
 
       expect(page).to have_css('[data-controller="access-rights"]')
-      expect(page).to have_css('[data-access-rights-target="citationOnlyView"]')
-      expect(page).to have_css('[data-access-rights-target="locationBasedDownload"]')
-      expect(page).to have_css('[data-access-rights-target="location"]', count: 6)
+      expect(page).to have_css('select[data-access-rights-target="view"][data-action="access-rights#toggle"]')
+      expect(page).to have_css('select[data-access-rights-target="download"][data-action="access-rights#toggle"]')
+      expect(page).to have_css('select[data-access-rights-target="location"]')
     end
   end
 end

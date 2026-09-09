@@ -13,11 +13,16 @@ module Edit
 
     attr_reader :form
 
-    # @param value [String] an access rights value, e.g. 'citation-only'
-    # @param suffix [String] 'View' or 'Download'
-    # @return [String] the Stimulus target name, e.g. 'citationOnlyView'
-    def stimulus_target_name(value, suffix)
-      "#{value.underscore.camelize(:lower)}#{suffix}"
+    def view_options
+      VIEW_RIGHTS.map { |view_right| [view_right.titleize, view_right] }
+    end
+
+    def download_options
+      DOWNLOAD_RIGHTS.map { |download_right| [download_right.titleize, download_right] }
+    end
+
+    def location_options
+      Constants::ACCESS_LOCATIONS.map { |location| [I18n.t("access.locations.#{location}"), location] }
     end
   end
 end
