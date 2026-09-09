@@ -14,7 +14,7 @@
       <% end %>
     </fieldset>
 
-    <fieldset class="mt-section">
+    <fieldset class="my-fieldset">
       <legend>Viewing direction</legend>
       <%= render SdrViewComponents::Forms::CheckboxComponent.new(form:, field_name: :change_viewing_direction,
                                                                  label_text: 'Change viewing direction (books and images only)',
@@ -28,7 +28,7 @@
       <% end %>
     </fieldset>
 
-    <fieldset class="mt-section">
+    <fieldset class="my-fieldset">
       <legend>Resource types</legend>
       <%= render SdrViewComponents::Forms::CheckboxComponent.new(form:, field_name: :change_resource_type,
                                                                  label_text: 'Change resource types', container_classes: 'mt-4',
