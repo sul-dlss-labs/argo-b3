@@ -47,7 +47,7 @@ RSpec.describe 'Create a new manage rights bulk action' do
     expect_locations_enabled
 
     # Select a location and switch back to world view with none download
-    within_fieldset('Location') { choose 'Spec' }
+    within_fieldset('Location') { choose 'Special collections' }
     choose_view_right 'World'
     choose_download_right 'None'
 
