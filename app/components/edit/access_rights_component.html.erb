@@ -1,0 +1,33 @@
+<div data-controller="access-rights">
+  <%= render SdrViewComponents::Forms::SelectFieldComponent.new(
+        form:,
+        field_name: :view,
+        options: view_options,
+        label_text: 'View access',
+        label_classes: 'fw-bold',
+        label_mark_required: true,
+        input_data: { access_rights_target: 'view', action: 'access-rights#toggle' }
+      ) %>
+
+  <%= render SdrViewComponents::Forms::SelectFieldComponent.new(
+        form:,
+        field_name: :download,
+        options: download_options,
+        label_text: 'Download access',
+        label_classes: 'fw-bold',
+        label_mark_required: true,
+        input_data: { access_rights_target: 'download', action: 'access-rights#toggle' },
+        container_classes: 'mt-section'
+      ) %>
+
+  <%= render SdrViewComponents::Forms::SelectFieldComponent.new(
+        form:,
+        field_name: :location,
+        options: location_options,
+        label_text: 'Location',
+        label_classes: 'fw-bold',
+        label_mark_required: true,
+        input_data: { access_rights_target: 'location' },
+        container_classes: 'mt-section'
+      ) %>
+</div>
